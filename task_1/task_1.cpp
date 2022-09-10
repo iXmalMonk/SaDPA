@@ -2,11 +2,12 @@
 
 #define CHAR_SIZE 16
 #define SIZE 5
-#define STUDENTS 10
+#define STUDENT 10
 
 struct Student
 {
 	float grade[SIZE];
+	float gpa;
 	float number;
 	char surname[CHAR_SIZE];
 };
@@ -14,7 +15,7 @@ struct Student
 struct Data
 {
 	char subject[SIZE][CHAR_SIZE];
-	Student student[STUDENTS];
+	Student student[STUDENT];
 };
 
 void createDataFromTxt(Data &data, const char *filename)
@@ -26,7 +27,7 @@ void createDataFromTxt(Data &data, const char *filename)
 	for (int i = 0; i < SIZE; i++)
 		fscanf_s(txt, "%s", data.subject[i], CHAR_SIZE);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < STUDENT; i++)
 	{
 		fscanf_s(txt, "%s%f", data.student[i].surname, CHAR_SIZE, &data.student[i].number);
 		for (int j = 0; j < SIZE; j++)
@@ -36,22 +37,61 @@ void createDataFromTxt(Data &data, const char *filename)
 	fclose(txt);
 }
 
-void printData(Data data)
+// true - grades, false - GPA
+void printData(Data data, bool mode)
 {
 	printf("   Фамилия № зач. кн.\t");
 
-	for (int i = 0; i < SIZE; i++)
-		printf("%s\t", data.subject[i]);
+	if (mode)
+		for (int i = 0; i < SIZE; i++)
+			printf("%s\t", data.subject[i]);
+	else
+		printf("Средний балл");
 
 	printf("\n");
 
-	for (int i = 0; i < STUDENTS; i++)
+	for (int i = 0; i < STUDENT; i++)
 	{
 		printf("%10s %.2f\t", data.student[i].surname, data.student[i].number);
-		for (int j = 0; j < SIZE; j++)
-			printf("%.1f\t", data.student[i].grade[j]);
+		
+		if (mode)
+			for (int j = 0; j < SIZE; j++)
+				printf("%.1f\t", data.student[i].grade[j]);
+		else
+			printf("%.1f\t", data.student[i].gpa);
 		printf("\n");
 	}
+
+	printf("\n");
+}
+
+void findGPAforStudent(Data &data)
+{
+	for (int i = 0; i < STUDENT; i++)
+	{
+		double amount = 0;
+		for (int j = 0; j < SIZE; j++)
+			amount += data.student[i].grade[j];
+		data.student[i].gpa = amount / SIZE;
+	}
+}
+
+void sortDataBySurname(Data &data)
+{
+	for (int i = 0; i < STUDENT; i++)
+		for (int j = i + 1; j < STUDENT; j++)
+		{
+			int n = 0;
+
+			if (data.student[i].surname[n] == data.student[j].surname[n]) n++;
+
+			if (data.student[i].surname[n] > data.student[j].surname[n])
+			{
+				Student temp = data.student[i];
+				data.student[i] = data.student[j];
+				data.student[j] = temp;
+			}
+		}
 }
 
 int main()
@@ -63,7 +103,13 @@ int main()
 
 	createDataFromTxt(data, "data.txt");
 
-	printData(data);
+	printData(data, true);
+
+	findGPAforStudent(data);
+
+	sortDataBySurname(data);
+
+	printData(data, false);
 
 	return 0;
 }

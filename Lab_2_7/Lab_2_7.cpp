@@ -25,6 +25,8 @@ void createDataFromTxt(Data& data, const char* filename)
 
 	for (int i = 0; i < data.size; i++)
 		fscanf_s(txt, "%s%*c%s%*c%s", data.user[i].surname, CHAR_SIZE, data.user[i].np, CHAR_SIZE, data.user[i].number, CHAR_SIZE);
+
+	fclose(txt);
 }
 
 void deleteData(Data& data)

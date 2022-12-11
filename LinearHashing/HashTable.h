@@ -18,10 +18,13 @@ private:
 	int size;
 	int count;
 
+	int hash(int key);
 public:
 	HashTable(int size);
 	~HashTable();
-	int hash(int key);
+
+	//
+
 	void insert(int key, int value);
 	int get(int key);
 	void remove(int key);

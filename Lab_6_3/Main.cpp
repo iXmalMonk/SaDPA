@@ -14,7 +14,7 @@ int main()
 
 	do
 	{
-		cout << "Start: ";
+		cout << "\tEXIT\n\tStart = 0\n\tand\n\tStop = 0\nStart: ";
 		cin >> start;
 		cout << "Stop: ";
 		cin >> stop;
